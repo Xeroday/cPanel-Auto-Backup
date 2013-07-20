@@ -1,0 +1,48 @@
+<html>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
+<script type="text/javascript" src="app.js"></script>
+
+<form id="form">
+	<input type="text" name="url">
+	<input type="text" name="username">
+	<input type="text" name="password">
+	<textarea style="display:none;" name="code">
+		<?php
+
+		{{header}}
+
+		if ($secure) {
+			$url = "ssl://" . $domain;
+			$port = 2083;
+		} else {
+			$url = $domain;
+			$port = 2082;
+		}
+
+		$socket = fsockopen($url, $port);
+		if (!$socket) {
+			exit("Failed to open socket connection.");
+		}
+
+		$params = "submit=Generate Backup";
+
+		fputs($socket, "POST /frontend/" . $theme . "/backup/dofullbackup.html?" . $params . " HTTP/1.0\r\n");
+		fputs($socket, "Host: $domain\r\n");
+		fputs($socket, "Authorization: Basic $auth\r\n");
+		fputs($socket, "Connection: Close\r\n");
+		fputs($socket, "\r\n");
+
+		while (!feof($socket)) {
+			$response = fgets($socket, 4096);
+			echo $response;
+		}
+
+		fclose($socket);
+
+		?></textarea>
+	<input type="button" value="Submit" onclick="process()">
+</form>
+
+<textarea id="result" cols="100" rows="100"></textarea>
+
+</html>
