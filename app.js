@@ -39,6 +39,7 @@ function process() {
 	code = code.replace('{{header}}', header);
 
 	$('#result').val(code);
+	document.location.href="#result";
 }
 
 function init(data) {
