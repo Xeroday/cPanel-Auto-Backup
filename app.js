@@ -1,5 +1,3 @@
-//https://server1.hostlatte.com:2083/cpsess5771243819/frontend/x3/index.html
-
 $("#form").on("submit", function(e) {
   e.preventDefault();
 });
@@ -39,24 +37,11 @@ function process() {
 	].join('\n');
 
 	code = code.replace('{{header}}', header);
-	console.log(code);
-
+	
 	$('#result').val(code);
 	$('#result').show();
 
 }
-
-$(document).ready(function(){
- 
-    $(".ftp").hide();
- 
-    $('input[type="checkbox"][name="ftp"]').click(function(){
-    	$(".ftp").slideToggle();
-    });
- 
-});
- 
-
 
 function init(data) {
 	for (var i = 0; i < data.length; i++) {
