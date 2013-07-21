@@ -2,6 +2,7 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
 <script type="text/javascript" src="app.js"></script>
 
+<p>Use this form to generate a backup.php script to use for your automated backups</p>
 <table>
 <form id="form">
 	<tr><td>Your cPanel URL (<a onclick="alert('The full URL of the page after you log into cPanel. \nShould look like: http://x.com:2082/frontend/x3/index.html')" href="#">?</a>): </td><td><input type="text" name="url" placeholder="http://x.com:2082/frontend/x3/index.html"></td></tr>
@@ -56,6 +57,6 @@ fclose($socket);
 </form>
 </table>
 
-<p><textarea id="result" cols="100" rows="50" style="display:none;"></textarea></p>
+<p>Result:</p><textarea id="result" cols="100" rows="25" onclick="this.select();">Click submit to generate this code.</textarea>
 
 </html>

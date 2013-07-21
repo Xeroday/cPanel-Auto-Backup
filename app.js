@@ -37,10 +37,8 @@ function process() {
 	].join('\n');
 
 	code = code.replace('{{header}}', header);
-	
-	$('#result').val(code);
-	$('#result').show();
 
+	$('#result').val(code);
 }
 
 function init(data) {
