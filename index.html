@@ -2,47 +2,55 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
 <script type="text/javascript" src="app.js"></script>
 
+<table>
 <form id="form">
-	<input type="text" name="url">
-	<input type="text" name="username">
-	<input type="text" name="password">
+	<tr><td>Your cPanel URL: </td><td><input type="text" name="url"></td></tr>
+	<tr><td>cPanel username: </td><td><input type="text" name="username"></td></tr>
+	<tr><td>cPanel password: </td><td><input type="text" name="password"></td></tr>
+	<tr><td>FTP Server: </td><td><input type="text" name="ftpserver"></td></tr>
+	<tr><td>FTP Username: </td><td><input type="text" name="ftpusername"></td></tr>
+	<tr><td>FTP Password: </td><td><input type="text" name="ftppassword"></td></tr>
+	<tr><td>FTP Port: </td><td><input type="text" name="ftpport" value="21"></td></tr>
+	<tr><td>FTP Directory: </td><td><input type="text" name="ftpdirectory" value="/"></td></tr>
 	<textarea style="display:none;" name="code">
-		<?php
+<?php
 
-		{{header}}
+{{header}}
 
-		if ($secure) {
-			$url = "ssl://" . $domain;
-			$port = 2083;
-		} else {
-			$url = $domain;
-			$port = 2082;
-		}
+if ($secure) {
+	$url = "ssl://" . $domain;
+	$port = 2083;
+} else {
+	$url = $domain;
+	$port = 2082;
+}
 
-		$socket = fsockopen($url, $port);
-		if (!$socket) {
-			exit("Failed to open socket connection.");
-		}
+$socket = fsockopen($url, $port);
+if (!$socket) {
+	exit("Failed to open socket connection.");
+}
 
-		$params = "submit=Generate Backup";
+$params = "submit=Generate Backup";
 
-		fputs($socket, "POST /frontend/" . $theme . "/backup/dofullbackup.html?" . $params . " HTTP/1.0\r\n");
-		fputs($socket, "Host: $domain\r\n");
-		fputs($socket, "Authorization: Basic $auth\r\n");
-		fputs($socket, "Connection: Close\r\n");
-		fputs($socket, "\r\n");
+fputs($socket, "POST /frontend/" . $theme . "/backup/dofullbackup.html?" . $params . " HTTP/1.0\r\n");
+fputs($socket, "Host: $domain\r\n");
+fputs($socket, "Authorization: Basic $auth\r\n");
+fputs($socket, "Connection: Close\r\n");
+fputs($socket, "\r\n");
 
-		while (!feof($socket)) {
-			$response = fgets($socket, 4096);
-			echo $response;
-		}
+while (!feof($socket)) {
+	$response = fgets($socket, 4096);
+	echo $response;
+}
 
-		fclose($socket);
+fclose($socket);
 
-		?></textarea>
-	<input type="button" value="Submit" onclick="process()">
+?>
+	</textarea></tr>
+	<tr><td colspan="2"><input type="button" value="Submit" onclick="process()"></td></tr>
 </form>
+</table>
 
-<textarea id="result" cols="100" rows="100"></textarea>
+<p><textarea id="result" cols="100" rows="50"></textarea></p>
 
 </html>

@@ -22,10 +22,10 @@ function process() {
 
 	var header = [ //Build header
 		'$auth = base64_encode("' + username + ':' + password + '");',
-		'\t\t$domain = "' + domain + '";',
-		'\t\t$theme = "' + theme + '";',
-		'\t\t$secure = ' + secure + ';',
-		'\t\t$params = "submit=Generate Backup' + '' + '";',
+		'$domain = "' + domain + '";',
+		'$theme = "' + theme + '";',
+		'$secure = ' + secure + ';',
+		'$params = "submit=Generate Backup' + '' + '";',
 	].join('\n');
 
 	code = code.replace('{{header}}', header);
@@ -34,6 +34,18 @@ function process() {
 	$('#result').val(code);
 
 }
+
+$(document).ready(function(){
+ 
+    $(".ftp").hide();
+ 
+    $('input[type="checkbox"][name="ftp"]').click(function(){
+    	$(".ftp").slideToggle();
+    });
+ 
+});
+ 
+
 
 function init(data) {
 	for (var i = 0; i < data.length; i++) {
