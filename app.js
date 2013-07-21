@@ -8,6 +8,7 @@ function process() {
 	init($('#form').serializeArray());
 
 	var secure = false;
+	var ftp = false;
 	var theme = 'x3'
 
 	if (url.indexOf("https://") == 0) { //Check SSL
@@ -20,18 +21,28 @@ function process() {
 
 	var domain = url.substring(url.indexOf('://') + 3, url.indexOf(':208')); //Only works if cPanel is on port 208x
 
+	if (ftpserver.length > 0) {
+		ftp = true;
+	}
+
 	var header = [ //Build header
 		'$auth = base64_encode("' + username + ':' + password + '");',
 		'$domain = "' + domain + '";',
 		'$theme = "' + theme + '";',
 		'$secure = ' + secure + ';',
-		'$params = "submit=Generate Backup' + '' + '";',
+		'$ftp = ' + ftp + ';',
+		'$ftpserver = "' + ftpserver + '";',
+		'$ftpusername = "' + ftpusername + '";',
+		'$ftppassword = "' + ftppassword + '";',
+		'$ftpport = "' + ftpport + '";',
+		'$ftpdirectory = "' + ftpdirectory + '";'
 	].join('\n');
 
 	code = code.replace('{{header}}', header);
 	console.log(code);
 
 	$('#result').val(code);
+	$('#result').show();
 
 }
 

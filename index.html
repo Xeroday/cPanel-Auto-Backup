@@ -7,7 +7,8 @@
 	<tr><td>Your cPanel URL: </td><td><input type="text" name="url"></td></tr>
 	<tr><td>cPanel username: </td><td><input type="text" name="username"></td></tr>
 	<tr><td>cPanel password: </td><td><input type="text" name="password"></td></tr>
-	<tr><td>FTP Server: </td><td><input type="text" name="ftpserver"></td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td>FTP Server: </td><td><input type="text" name="ftpserver" placeholder="Leave blank to disable"></td></tr>
 	<tr><td>FTP Username: </td><td><input type="text" name="ftpusername"></td></tr>
 	<tr><td>FTP Password: </td><td><input type="text" name="ftppassword"></td></tr>
 	<tr><td>FTP Port: </td><td><input type="text" name="ftpport" value="21"></td></tr>
@@ -30,7 +31,11 @@ if (!$socket) {
 	exit("Failed to open socket connection.");
 }
 
-$params = "submit=Generate Backup";
+if ($ftp) {
+	$params = "dest=ftp&server=$ftpserver&user=$ftpusername&pass=$ftppassword&port=$ftpport&rdir=$ftpdirectory&submit=Generate Backup";
+} else {
+	$params = "submit=Generate Backup";
+}
 
 fputs($socket, "POST /frontend/" . $theme . "/backup/dofullbackup.html?" . $params . " HTTP/1.0\r\n");
 fputs($socket, "Host: $domain\r\n");
@@ -47,10 +52,10 @@ fclose($socket);
 
 ?>
 	</textarea></tr>
-	<tr><td colspan="2"><input type="button" value="Submit" onclick="process()"></td></tr>
+	<tr><td colspan="2" align="center"><input type="button" value="Submit" onclick="process()"></td></tr>
 </form>
 </table>
 
-<p><textarea id="result" cols="100" rows="50"></textarea></p>
+<p><textarea id="result" cols="100" rows="50" style="display:none;"></textarea></p>
 
 </html>
