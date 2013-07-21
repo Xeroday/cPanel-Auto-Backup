@@ -39,7 +39,7 @@ function process() {
 	code = code.replace('{{header}}', header);
 
 	$('#result').val(code);
-	document.location.href="#result";
+	document.location.href="#submitButton";
 }
 
 function init(data) {
