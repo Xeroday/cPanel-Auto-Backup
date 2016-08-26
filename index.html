@@ -1,12 +1,12 @@
 <html>
-<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="app.js"></script>
 
 <table>
 <form id="form">
-	<tr><td>Your cPanel URL (<a onclick="alert('The full URL of the page after you log into cPanel. \nShould look like: http://x.com:2082/frontend/x3/index.html')" href="javascript:return;">?</a>): </td><td><input type="text" name="url" placeholder="http://x.com:2082/frontend/x3/index.html"></td></tr>
+	<tr><td>Your cPanel URL (<a onclick="alert('The full URL of the page after you log into cPanel. \nShould look like: https://x.com:2083/frontend/x3/index.html')" href="javascript:return;">?</a>): </td><td><input type="text" name="url" placeholder="https://x.com:2083/frontend/x3/index.html"></td></tr>
 	<tr><td>cPanel username: </td><td><input type="text" name="username"></td></tr>
-	<tr><td>cPanel password: </td><td><input type="text" name="password"></td></tr>
+	<tr><td>cPanel password: </td><td><input type="password" name="password"></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td>FTP Server: </td><td><input type="text" name="ftpserver" placeholder="Leave blank to disable"></td></tr>
 	<tr><td>FTP Username: </td><td><input type="text" name="ftpusername"></td></tr>
@@ -18,38 +18,38 @@
 
 {{header}}
 
-if ($secure) {
-	$url = "ssl://" . $domain;
-	$port = 2083;
-} else {
-	$url = $domain;
-	$port = 2082;
-}
-
-$socket = fsockopen($url, $port);
-if (!$socket) {
-	exit("Failed to open socket connection.");
-}
-
+// Do not change below
+$url = $domain . "/frontend/" . $theme . "/backup/dofullbackup.html";
+$data = array();
 if ($ftp) {
-	$params = "dest=ftp&server=$ftpserver&user=$ftpusername&pass=$ftppassword&port=$ftpport&rdir=$ftpdirectory&submit=Generate Backup";
-} else {
-	$params = "submit=Generate Backup";
+  $data["dest"] = "ftp";
+  $data["server"] = $ftp_server;
+  $data["user"] = $ftp_username;
+  $data["pass"] = $ftp_password;
+  $data["port"] = $ftp_port;
+  $data["rdir"] = $ftp_directory;
 }
 
-fputs($socket, "POST /frontend/" . $theme . "/backup/dofullbackup.html?" . $params . " HTTP/1.0\r\n");
-fputs($socket, "Host: $domain\r\n");
-fputs($socket, "Authorization: Basic $auth\r\n");
-fputs($socket, "Connection: Close\r\n");
-fputs($socket, "\r\n");
+$options = array(
+  'http' => array(
+    'header'  => "Content-type: application/x-www-form-urlencoded\r\nAuthorization: Basic $auth\r\n",
+    'method'  => 'POST',
+    'content' => http_build_query($data)
+  ),
+  'ssl' => array(
+    'verify_peer' => false,
+    'verify_peer_name' => false,
+    'allow_self_signed' => true
+  )
+);
 
-while (!feof($socket)) {
-	$response = fgets($socket, 4096);
-	echo $response;
+$context = stream_context_create($options);
+$result = file_get_contents($url, false, $context);
+if ($result === FALSE) {
+  exit("Error backing up server.");
 }
 
-fclose($socket);
-
+echo $result;
 ?>
 	</textarea></tr>
 	<tr><td colspan="2" align="center"><a name="submitButton"><input type="button" value="Submit" onclick="process()"></a></td></tr>
