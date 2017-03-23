@@ -8,7 +8,10 @@
 	<tr><td>cPanel username: </td><td><input type="text" name="username"></td></tr>
 	<tr><td>cPanel password: </td><td><input type="password" name="password"></td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td>FTP Server: </td><td><input type="text" name="ftpserver" placeholder="Leave blank to disable"></td></tr>
+    <tr><td>Notification after backup: </td><td><label for="email_radio-1"><input type="radio" name="email_radio" id="email_radio-1" value="1"><input name="email" type="email" placeholder="your email"></label><br><label for="email_radio-0"> <input type="radio" name="email_radio" id="email_radio-0" value="0" checked="checked"> Do not notify</label></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td>FTP Transfer Type: </td><td><select name="dest"><option value="ftp">Normal</option><option value="passiveftp">Passive ( Recommended for shared hosting )</option></select></td></tr>
+    <tr><td>FTP Server: </td><td><input type="text" name="ftpserver" placeholder="Leave blank to disable"></td></tr>
 	<tr><td>FTP Username: </td><td><input type="text" name="ftpusername"></td></tr>
 	<tr><td>FTP Password: </td><td><input type="text" name="ftppassword"></td></tr>
 	<tr><td>FTP Port: </td><td><input type="text" name="ftpport" value="21"></td></tr>
@@ -22,7 +25,9 @@
 $url = $domain . "/frontend/" . $theme . "/backup/dofullbackup.html";
 $data = array();
 if ($ftp) {
-  $data["dest"] = "ftp";
+  $data["email_radio"] = $email_radio;
+  $data["email"] = $email;
+  $data["dest"] = $ftp_dest;
   $data["server"] = $ftp_server;
   $data["user"] = $ftp_username;
   $data["pass"] = $ftp_password;
