@@ -7,7 +7,10 @@ https://github.com/Xeroday/cPanel-Auto-Backup
 $auth = base64_encode("username:password");
 $domain = "https://example.com:2083";
 $theme = "paper_lantern";
-$ftp = false;
+$ftp = false; # true - if you want to send by FTP
+$email_radio = "0"; # 1 - receive notification after backup
+$email = ""; # your email if you decide to receive notifications
+$ftp_dest = "ftp"; # passiveftp - recommended for shared hosting
 $ftp_server = "";
 $ftp_username = "";
 $ftp_password = "";
@@ -18,7 +21,9 @@ $ftp_directory = "/";
 $url = $domain . "/frontend/" . $theme . "/backup/dofullbackup.html";
 $data = array();
 if ($ftp) {
-  $data["dest"] = "ftp";
+  $data["email_radio"] = $email_radio;
+  $data["email"] = $email;
+  $data["dest"] = $ftp_dest;
   $data["server"] = $ftp_server;
   $data["user"] = $ftp_username;
   $data["pass"] = $ftp_password;
@@ -45,5 +50,12 @@ if ($result === FALSE) {
   exit("Error backing up server.");
 }
 
-echo $result;
-?>
+preg_match_all('/<div id=\"backupSuccessMsg(.+?)<\/div>/s', $result, $content);
+$show = $content[0][0];
+$filter = array('<div id="backupSuccessMsg" class="alert-message">
+','<div>','</div>', '  ', '
+');
+$show = str_replace($filter, '', $show);
+$show = str_replace('...', '... ', $show);
+$show = str_replace('…', '... ', $show);
+echo $show;
