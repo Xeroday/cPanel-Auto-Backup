@@ -50,5 +50,12 @@ if ($result === FALSE) {
   exit("Error backing up server.");
 }
 
-echo $result;
-?>
+preg_match_all('/<div id=\"backupSuccessMsg(.+?)<\/div>/s', $result, $content);
+$show = $content[0][0];
+$filter = array('<div id="backupSuccessMsg" class="alert-message">
+','<div>','</div>', '  ', '
+');
+$show = str_replace($filter, '', $show);
+$show = str_replace('...', '... ', $show);
+$show = str_replace('…', '... ', $show);
+echo $show;

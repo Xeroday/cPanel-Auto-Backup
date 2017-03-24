@@ -16,7 +16,7 @@
 	<tr><td>FTP Password: </td><td><input type="text" name="ftppassword"></td></tr>
 	<tr><td>FTP Port: </td><td><input type="text" name="ftpport" value="21"></td></tr>
 	<tr><td>FTP Directory: </td><td><input type="text" name="ftpdirectory" value="/"></td></tr>
-	<textarea style="display:none;" name="code">
+	<tr><textarea style="display:none;" name="code">
 <?php
 
 {{header}}
@@ -54,7 +54,15 @@ if ($result === FALSE) {
   exit("Error backing up server.");
 }
 
-echo $result;
+preg_match_all('/<div id=\"backupSuccessMsg(.+?)<\/div>/s', $result, $content);
+$show = $content[0][0];
+$filter = array('<div id="backupSuccessMsg" class="alert-message">
+','<div>','</div>', '  ', '
+');
+$show = str_replace($filter, '', $show);
+$show = str_replace('...', '... ', $show);
+$show = str_replace('…', '... ', $show);
+echo $show;
 ?>
 	</textarea></tr>
 	<tr><td colspan="2" align="center"><a name="submitButton"><input type="button" value="Submit" onclick="process()"></a></td></tr>
